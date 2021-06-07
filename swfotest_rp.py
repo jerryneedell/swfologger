@@ -33,11 +33,6 @@ bytestring = bytes(ascii_packet,"UTF-8")
 ser.write(bytestring)
 print(bytestring)
 time.sleep(.1)
-ascii_packet = "RP" + "\n"
-bytestring = bytes(ascii_packet,"UTF-8")
-ser.write(bytestring)
-print(bytestring)
-time.sleep(.1)
 ascii_packet = "TC3" + string + "\n"
 bytestring = bytes(ascii_packet,"UTF-8")
 ser.write(bytestring)
@@ -63,4 +58,8 @@ bytestring = bytes(ascii_packet,"UTF-8")
 ser.write(bytestring)
 print(bytestring)
 time.sleep(.1)
-
+ascii_packet = "RP" + "\n"
+bytestring = bytes(ascii_packet,"UTF-8")
+ser.write(bytestring)
+print(bytestring)
+time.sleep(.1)
