@@ -20,7 +20,11 @@ while True:
             print("decode error",e)
         if data[0] == 0x52 and data[1] == 0x50:  # RP
             print("Playback request\r\n")
-            os.rename("swfolog.txt","swfoplayback.txt")
+            if not os.path.exists("swfoplayback.txt"):
+                os.rename("swfolog.txt","swfoplayback.txt")
             os.system("python3 swfoplayback.py &")
+        elif data[0] == 0x44 and data[1] == 0x50:  # DP
+            print("Deleted Playback File\r\n")
+            os.remove("swfoplayback.txt")
     else:
         print(".",end = '', flush = True)
