@@ -23,6 +23,9 @@ while True:
             if not os.path.exists("swfoplayback.txt"):
                 os.rename("swfolog.txt","swfoplayback.txt")
             os.system("python3 swfoplayback.py &")
+        if data[0] == 0x53 and data[1] == 0x44:  # SD
+            print("Shutdown request\r\n")
+            os.system("sudo shutdown -h now ")
         elif data[0] == 0x44 and data[1] == 0x50:  # DP
             if os.path.exists("swfoplayback.txt"):
                 print("Deleted Playback File\r\n")
