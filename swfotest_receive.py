@@ -1,8 +1,17 @@
 import serial
 import time
 import os
+import sys
 
-ser = serial.Serial('/dev/tty.usbserial-142420', 9600,timeout=.1)
+port = ''
+
+if len(sys.argv) != 2:
+    print("Usage:python3 swfotest_receive.py <PORT>")
+    exit(0)
+
+port = sys.argv[1]
+
+ser = serial.Serial(port, 9600)
 
 while True:
     #data = ser.read(ser.inWaiting())

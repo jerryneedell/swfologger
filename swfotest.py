@@ -1,8 +1,16 @@
 import serial
 import time
+import sys
 
+port = ''
 
-ser = serial.Serial('/dev/tty.usbserial-142420', 9600)
+if len(sys.argv) != 2:
+    print("Usage:python3 swfotest.py <PORT>")
+    exit(0)
+
+port = sys.argv[1]
+
+ser = serial.Serial(port, 9600)
 
 packet_length = 20
 packet = bytearray(packet_length)
