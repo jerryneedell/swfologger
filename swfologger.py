@@ -31,5 +31,3 @@ while True:
             print("Shutdown request\r\n")
             os.system("sudo shutdown -h now ")
             break
-    else:
-        print(".",end = '', flush = True)
