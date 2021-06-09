@@ -1,0 +1,13 @@
+[Unit]
+Description=SWFO Data Logger
+After=multi-user.target
+
+[Service]
+Type=idle
+User=pi
+ExecStart=/usr/bin/python3 /usr/local/bin/swfologger.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
