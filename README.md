@@ -3,7 +3,9 @@ SWFO data logger
 
 
 ## logger computer
-Raspberry Pi zero  - swfologger.local  via ssh — if ethernet connected
+Raspberry Pi 2B/B+ or Raspberry Pi Zero
+username pi
+hostname: swfologger.local - gets IP address via DHCP if ethernet connected - ssh enabled
 installed RaspiOS lite
 use raspi-config to
     enable UART0 — disable Serial Console
@@ -14,16 +16,17 @@ installed needed tools
 sudo apt-get install python3-pip
 sudo pip3 install --upgrade setuptools
 sudo apt-get install git
+pip3 install pyserial
 ```
 
 
 ## logger software
-* swfologger.py is the logger code
-* swfoplayback.py is called by the loggger when required
+* `swfologger.py` - main data logger  -- uses pyserial; reads from `/dev/serial0` UART rate = `9600 baud`
+* `swfoplayback.py` - called by the loggger when required to generate playback - uses pyserial; writes to `/dev/serial0`
 
-both are placed in `/usr/local/bin`
+both are placed in `/usr/local/bin` for execution
+working copy of the github repository is in `/home/pi/projects/swfologger`
 logged data is stored in `/home/pi/logger`
-
 any data sent to the logger is logged to a file named `swfolog.txt`
 it is assumed ahat the data will consist only of Telecommands and Simulation Directives and they will newline terminated ASCII strings beginning with
 
