@@ -27,7 +27,7 @@ while True:
                 os.remove("/home/pi/logger/swfoplayback.txt")
             else:
                 print("No Playback File found\r\n")
-        elif data[0] == 0x53 and data[1] == 0x44:  # SD
+        elif data[0] == 0x48 and data[1] == 0x41 and data[2] == 0x4C and data[3] == 0x54:  # HALT
             print("Shutdown request\r\n")
             os.system("sudo shutdown -h now ")
             break
