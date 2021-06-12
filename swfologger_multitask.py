@@ -3,14 +3,12 @@ import time
 import os
 
 ser = serial.Serial('/dev/serial0', 9600, timeout=.1)
-dumping_data = False
+
 while True:
-    data = None
-    if ser.in_waiting:
-        data = ser.read(ser.in_waiting)
+    data = ser.read_until(expected=b'\n')
     if data:
-        #if data[len(data)-1] != 0x0a :
-        #    print("newline terminator missing\rn")
+        if data[len(data)-1] != 0x0a :
+            print("newline terminator missing\rn")
         #print([hex(x) for x in data])
         #print(data)
         try:
@@ -22,7 +20,7 @@ while True:
             print("Playback request\r\n")
             if not os.path.exists("/home/pi/logger/swfoplayback.txt"):
                 os.rename("/home/pi/logger/swfolog.txt","/home/pi/logger/swfoplayback.txt")
-            dumping_data = True
+            os.system("python3 /usr/local/bin/swfoplayback.py &")
         elif data[0] == 0x44 and data[1] == 0x50:  # DP
             if os.path.exists("/home/pi/logger/swfoplayback.txt"):
                 print("Deleted Playback File\r\n")
@@ -33,24 +31,3 @@ while True:
             print("Shutdown request\r\n")
             os.system("sudo shutdown -h now ")
             break
-    if dumping_data:
-        with open("/home/pi/logger/swfoplayback.txt","r") as playbackfile:
-            while dumping_data :
-                line=playbackfile.readline()
-                if line:
-                    ser.write(bytes(line,"UTF-8"))
-                    #print(line)
-                else:
-                    dumping_data = False
-                    print("End of Playback")
-                data = None
-                if ser.in_waiting:
-                    data = ser.read(ser.in_waiting)
-                if data:
-                    try:
-                        with open("/home/pi/logger/swfolog.txt","a") as logfile:
-                            logfile.write(data.decode("UTF-8"))
-                    except UnicodeDecodeError as e:
-                        print("decode error",e)
-
-
