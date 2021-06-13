@@ -23,5 +23,5 @@ print(bytestring)
 
 while True:
     ser.write(bytestring)
-    time.sleep(.1)
+    time.sleep(.25)
 
