@@ -10,11 +10,8 @@ import digitalio
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
 cs = digitalio.DigitalInOut(board.SD_CS)
 sd = adafruit_sdcard.SDCard(spi, cs)
-#sd = sdioio.SDCard(clock=board.SDIO_CLOCK,command=board.SDIO_COMMAND,data=board.SDIO_DATA,frequency=5000000)
 vfs = storage.VfsFat(sd)
 storage.mount(vfs, '/sd')
-sys.path.append("/sd")
-sys.path.append("/sd/lib")
 
 
 ser = busio.UART(board.TX, board.RX, baudrate=9600, timeout=1,receiver_buffer_size=128)
@@ -41,6 +38,12 @@ def get_data():
                 print("Playback request\r\n")
                 os.rename("/sd/swfolog.txt","/sd/swfoplayback.txt")
                 dumping_data = True
+            elif data[0] == 0x44 and data[1] == 0x50:  # DP
+                if "swfoplayback.txt" in os.listdir("/sd"):
+                    print("Deleted Playback File\r\n")
+                    os.remove("/sd/swfoplayback.txt")
+                else:
+                    print("No Playback File Found\r\n")
         if data[0] == 0x48 and data[1] == 0x41 and data[2] == 0x4C and data[3] == 0x54:  # HALT
             print("Shutdown request not implemented\r\n")
 
@@ -55,7 +58,5 @@ while True:
                 else:
                     dumping_data = False
                     print("End of Playback")
-                    print("Deleted Playback File\r\n")
-                    os.remove("/sd/swfoplayback.txt")
                 get_data()
 
