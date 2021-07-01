@@ -59,33 +59,51 @@ last_mag = 0
 hk_seqcnt = 0
 vec_seqcnt = 0
 time_msg_apid = 1
+
 while True:
     offset = 0
     multipacket = True
     data = ser.read(ser.inWaiting())
     if data :
+        print(len(data),ser.inWaiting())
+        start=time.monotonic()
         print([hex(x) for x in data])
         while multipacket:
             # Decode primary header
             apid    = (data[offset+0] * 256 + data[offset+1]) & 0x7ff
             seq_cnt = (data[offset+2] * 256 + data[offset+3]) & 0x3fff
             plen    = data[offset+4] * 256 + data[offset+5]
+            oldoffset = offset
+            offset = offset + plen + 7
+            if len(data) < offset: 
+                print(">>> incomplete packet received. Looking for remainder")
+                print(plen,len(data),offset)
+                while not ser.inWaiting():
+                    pass
+                print(time.monotonic()-start)
+                print(ser.inWaiting())
+                data = data + ser.read(ser.inWaiting())
+                if data :
+                    print(len(data),ser.inWaiting())
+                    print([hex(x) for x in data])
 
-            if apid == time_msg_apid: # Time message
-                tmsg_days  = (data[offset+6] * 256 + data[offset+7]) * 256 + data[offset+8]
-                tmsg_msecs = ((data[offset+9] * 256 + data[offset+10]) * 256 + data[offset+11]) * 256 + data[offset+12]
-                tmsg_usecs = data[offset+13] * 256 + data[offset+14]
-                print("Received Time Message: days = %06x  msecs = %08x  usecs = %04x" % (tmsg_days, tmsg_msecs, tmsg_usecs))
-            logger_string = ''.join('{0:02x}'.format(x) for x in data[offset:offset+plen+7])
+            logger_string = ''.join('{0:02x}'.format(x) for x in data[oldoffset:oldoffset+plen+7])
             logger_string = "TC" + logger_string + "\n"
             logger_bytestring = bytes(logger_string,"UTF-8")
             ser_logger.write(logger_bytestring)
-            offset = offset + plen + 7
             if len(data) != offset: 
-                print(">>> multiple packets received. Looking for new packet")
+                print(">>> multiple packets received. Looking for newpacket")
                 print(plen,len(data),offset)
             else:
                 multipacket = False
+
+        if apid == 1: # Time message
+            tmsg_days  = (data[oldoffset+6] * 256 + data[oldoffset+7]) * 256 + data[oldoffset+8]
+            tmsg_msecs = ((data[oldoffset+9] * 256 + data[oldoffset+10]) * 256 + data[oldoffset+11]) * 256 + data[oldoffset+12]
+            tmsg_usecs = data[oldoffset+13] * 256 + data[oldoffset+14]
+            print("Received Time Message: days = %06x  msecs = %08x  usecs = %04x" % (tmsg_days, tmsg_msecs, tmsg_usecs))
+
+
     if (hk_cadence > 0) and ((time.monotonic() - last_hk) > hk_cadence) :
         last_hk=time.monotonic()
 
