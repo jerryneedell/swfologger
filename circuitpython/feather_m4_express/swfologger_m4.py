@@ -43,6 +43,22 @@ def get_data():
                     os.remove("/sd/swfoplayback.txt")
                 else:
                     print("No Playback File found\r\n")
+            elif data[0] == 0x57 and data[1] == 0x49 and data[2] == 0x50 and data[3] == 0x45:  # WIPE
+                if "swfoplayback.txt" in os.listdir("/sd"):
+                    print("Deleted Playback File\r\n")
+                    os.remove("/sd/swfoplayback.txt")
+                else:
+                    print("No Playback File found\r\n")
+                if "swfolog.txt" in os.listdir("/sd"):
+                    print("Deleted Log File\r\n")
+                    os.remove("/sd/swfolog.txt")
+                else:
+                    print("No Log File found\r\n")
+                try:
+                    with open("/sd/swfolog.txt","a") as logfile:
+                        logfile.write(data.decode("UTF-8"))
+                except Exception as e:
+                    print("decode error",e)
 
         if data[0] == 0x48 and data[1] == 0x41 and data[2] == 0x4C and data[3] == 0x54:  # HALT
             print("Shutdown request not implemented\r\n")
