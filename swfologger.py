@@ -18,7 +18,7 @@ def get_data():
         try:
             with open("/home/pi/logger/swfolog.txt","a") as logfile:
                 logfile.write(data.decode("UTF-8"))
-        except UnicodeDecodeError as e:
+        except Exception as e:
             print("decode error",e)
         if not dumping_data:
             if data[0] == 0x52 and data[1] == 0x50:  # RP
@@ -32,6 +32,23 @@ def get_data():
                     os.remove("/home/pi/logger/swfoplayback.txt")
                 else:
                     print("No Playback File found\r\n")
+            elif data[0] == 0x57 and data[1] == 0x49 and data[2] == 0x50 and data[3] == 0x45:  # WIPE
+                if os.path.exists("/home/pi/logger/swfoplayback.txt"):
+                    print("Deleted Playback File\r\n")
+                    os.remove("/home/pi/logger/swfoplayback.txt")
+                else:
+                    print("No Playback File found\r\n")
+                if os.path.exists("/home/pi/logger/swfolog.txt"):
+                    print("Deleted Log File\r\n")
+                    os.remove("/home/pi/logger/swfolog.txt")
+                else:
+                    print("No Log File found\r\n")
+                try:
+                    with open("/home/pi/logger/swfolog.txt","a") as logfile:
+                        logfile.write(data.decode("UTF-8"))
+                except Exception as e:
+                    print("decode error",e)
+
         if data[0] == 0x48 and data[1] == 0x41 and data[2] == 0x4C and data[3] == 0x54:  # HALT
             print("Shutdown request\r\n")
             os.system("sudo shutdown -h now ")
