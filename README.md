@@ -2,32 +2,26 @@
 SWFO data logger
 
 
-## logger computer
-Raspberry Pi 2B/B+ or Raspberry Pi Zero
-username pi
-hostname: swfologger.local - gets IP address via DHCP if ethernet connected - ssh enabled
-installed RaspiOS lite
-use raspi-config to
-    enable UART0 — disable Serial Console
-    set locale to `UTF-8`, TZ to `UTC`
-
-installed needed tools
-```
-sudo apt-get install python3-pip
-sudo pip3 install --upgrade setuptools
-sudo apt-get install git
-pip3 install pyserial
-```
-
+## logger microcontroller
+Adafruit Feather M0 Adalogger https://www.adafruit.com/product/2796
 
 ## logger software
-* `swfologger.py` - main data logger  -- uses pyserial; reads from `/dev/serial0` UART rate = `9600 baud`
-* `swfoplayback.py` - called by the loggger when required to generate playback - uses pyserial; writes to `/dev/serial0`
+Bootloader:bootloader-feather_m0_3.13.0.bin
+CirCuitPython: V7.0.0
+https://github.com/jerryneedell/swfologger/blob/main/circuitpython/adalogger/adafruit-circuitpython-feather_m0_adalogger-en_US-7.0.0.uf2
 
-both are placed in `/usr/local/bin` for execution
-working copy of the github repository is in `/home/pi/projects/swfologger`
-logged data is stored in `/home/pi/logger`
-any data sent to the logger is logged to a file named `swfolog.txt`
+libraries:
+```
+    adafruit_busdevice/
+        i2c_device.mpy
+        __init__.mpy
+        spi_device.mpy
+    adafruit_sdcard.mpy
+```
+At boot CircuitPython executes a file name code.py
+code.py contains the executable code from adalogger_swfologger.py
+
+any data sent to the logger is logged to the SDCard in a file named `sd/swfolog.txt` 
 it is assumed ahat the data will consist only of Telecommands and Simulation Directives and they will newline terminated ASCII strings beginning with
 
 * "TC ...\n" (telecommand)
@@ -41,8 +35,7 @@ If it is not, the rename will not occur and the same `swfoplayback.txt` will be 
 ## Special commands
 * "RP\n" would request a replay.
 * "DP\n" deletes swfoplayback.txt “HALT” shutdown the Pi
-* "HALT\n" shuts down the logger - power cycel needed to restart.
-
+* "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
 
 
 The normal sequence is:
@@ -53,7 +46,7 @@ after playback complete
 Send DP
 ```
 
-It is OK to send a DP before an RP to make sure the `swfoplayback.txt` file has been deleded
+It is OK to send an extra DP before any RP to make sure the `swfoplayback.txt` file has been deleded
 
 
 
@@ -71,39 +64,7 @@ e.g. `python3 swfotest_rp.py /dev/ttyUSB5`
 * `swfotest.py`  -- continually sends  TCs 
 * `swfotest_rp.py` -- sends `RP` request playback
 * `swfotest_delete` -- sends `DP` to deleted the `swfoplayback.txt` file
-* `swfotest_halt.py` -- send `HALT` to shutdown the logger
+* `swfotest_wipe.py` -- send `WIPE` to clear the SDCard
 * `swfoscsim_logger.py` -- runs on system with SCSIm and COSMOS - relays all receivd commands (time code messages) to the logger
-
-
-
-# systemd service
-on the Raspberry Pi `/usr/local/bin/swfologger.py` is automatically started on boot via systemd service
-It was installed as follows
-create a file named `swfologger.service` containing
-```
-[Unit]
-Description=SWFO Data Logger
-After=multi-user.target
-
-[Service]
-Type=idle
-User=pi
-ExecStart=/usr/bin/python3 /usr/local/bin/swfologger.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-
-to install the service
-```
-sudo cp swfologger.service /lib/systemd/system
-sudo chmod 644 /lib/systemd/system/swfologger.service 
-sudo systemctl daemon-reload
-sudo systemctl enable swfologger.service 
-```
-either `reboot` or 
-`sudo systemctl start swfologger.service`
 
 
