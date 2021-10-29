@@ -18,14 +18,14 @@ libraries:
         spi_device.mpy
     adafruit_sdcard.mpy
 ```
-At boot CircuitPython executes a file name code.py
-code.py contains the executable code from adalogger_swfologger.py
+At boot CircuitPython executes a file name code.py. 
+code.py contains the executable code from `circuitpython/adalogger/adalogger_swfologger.py`
 
-any data sent to the logger is logged to the SDCard in a file named `sd/swfolog.txt` 
-it is assumed ahat the data will consist only of Telecommands and Simulation Directives and they will newline terminated ASCII strings beginning with
+All data sent to the logger is logged to the SDCard in a file named `sd/swfolog.txt` 
+it is assumed that the data will consist only of Telecommands and Simulation Directives and they will newline terminated ASCII strings beginning with
 
 * "TC ...\n" (telecommand)
-* "SD ..\n." (simulation directive)
+* "SD ..\n" (simulation directive)
 
 when a playback is requested, the `swfolog.txt` file is renamed to `swfoplayback.txt` so incomming commands may still be logged to `swfolog.txt`
 
@@ -37,6 +37,7 @@ If it is not, the rename will not occur and the same `swfoplayback.txt` will be 
 * "DP\n" deletes swfoplayback.txt “HALT” shutdown the Pi
 * "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
 
+Commands reveived are alos written to the log file.
 
 The normal sequence is:
 ```
@@ -63,8 +64,8 @@ e.g. `python3 swfotest_rp.py /dev/ttyUSB5`
 * `swfotest_receive.py`  -- recives "playback" file from logger - saves as `swfotest.txt`
 * `swfotest.py`  -- continually sends  TCs 
 * `swfotest_rp.py` -- sends `RP` request playback
-* `swfotest_delete` -- sends `DP` to deleted the `swfoplayback.txt` file
+* `swfotest_delete` -- sends `DP` to delete the `swfoplayback.txt` file
 * `swfotest_wipe.py` -- send `WIPE` to clear the SDCard
-* `swfoscsim_logger.py` -- runs on system with SCSIm and COSMOS - relays all receivd commands (time code messages) to the logger
+* `swfoscsim_logger.py` -- runs on system with SCSim and COSMOS - relays all receivd commands (time code messages) to the logger
 
 
