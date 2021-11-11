@@ -1,5 +1,4 @@
-# swfologger
-SWFO data logger
+# swfologger: SWFO Data Logger
 
 
 ## logger microcontroller hardware
@@ -11,7 +10,7 @@ Bootloader:bootloader-feather_m0_3.13.0.bin
 CirCuitPython: V7.0.0
 https://github.com/jerryneedell/swfologger/blob/main/circuitpython/adalogger/adafruit-circuitpython-feather_m0_adalogger-en_US-7.0.0.uf2
 
-libraries:
+### libraries
 ```
     adafruit_busdevice/
         i2c_device.mpy
@@ -19,6 +18,7 @@ libraries:
         spi_device.mpy
     adafruit_sdcard.mpy
 ```
+### operation
 At boot CircuitPython executes a file name code.py. 
 code.py contains the executable code from `circuitpython/adalogger/adalogger_swfologger.py`
 
@@ -33,7 +33,7 @@ when a playback is requested, the `swfolog.txt` file is renamed to `swfoplayback
 After successful playback `swfoplayback.txt` must be deleted.
 If it is not, the rename will not occur and the same `swfoplayback.txt` will be sent again. `swfolog.txt` will continue to accumuate new data.
 
-## Special commands
+### Special commands to playback data
 * "RP\n" would request a replay.
 * "DP\n" deletes swfoplayback.txt “HALT” shutdown the Pi
 * "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
@@ -53,12 +53,12 @@ It is OK to send an extra DP before any RP to make sure the `swfoplayback.txt` f
 
 
 
-# to test from another computer
+### to test from another computer
 (may want to use a virtual environment)
 the test programs use pyserial
 pip3 install pyserial
 
-# test programs
+### test programs
 to execute use: `python3 program.py  <UART PORT>`
 e.g. `python3 swfotest_rp.py /dev/ttyUSB5`
 
