@@ -3,24 +3,25 @@
 
 ## logger microcontroller hardware
 Adafruit Feather M0 Adalogger https://www.adafruit.com/product/2796
-Sandisk 4Gbyte SD Card MicroSD HC Class 4 https://www.amazon.com/gp/product/B0106QRO8I/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1
+Sandisk 4Gbyte SD Card MicroSD HC Class 4
 
 ## logger software
 Bootloader:bootloader-feather_m0_3.13.0.bin
 CirCuitPython: V7.0.0
 https://github.com/jerryneedell/swfologger/blob/main/circuitpython/adalogger/adafruit-circuitpython-feather_m0_adalogger-en_US-7.0.0.uf2
 
-### libraries
+### CircuitPython libraries installed
 ```
-    adafruit_busdevice/
-        i2c_device.mpy
-        __init__.mpy
-        spi_device.mpy
-    adafruit_sdcard.mpy
+adafruit_busdevice/
+    i2c_device.mpy
+    __init__.mpy
+    spi_device.mpy
+adafruit_sdcard.mpy
 ```
 ### operation
-At boot CircuitPython executes a file name code.py. 
-code.py contains the executable code from `circuitpython/adalogger/adalogger_swfologger.py`
+At boot CircuitPython executes a file named `code.py`.
+
+The installed `code.py` contains the executable code from `circuitpython/adalogger/adalogger_swfologger.py`
 
 All data sent to the logger is logged to the SDCard in a file named `sd/swfolog.txt` 
 it is assumed that the data will consist only of Telecommands and Simulation Directives and they will newline terminated ASCII strings beginning with
@@ -28,17 +29,19 @@ it is assumed that the data will consist only of Telecommands and Simulation Dir
 * "TC ...\n" (telecommand)
 * "SD ..\n" (simulation directive)
 
+
+### Special commands to playback data
+* "RP\n" would request a replay.
+* "DP\n" deletes swfoplayback.txt
+* "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
+
+Commands reveived are alos written to the log file.
+
 when a playback is requested, the `swfolog.txt` file is renamed to `swfoplayback.txt` so incomming commands may still be logged to `swfolog.txt`
 
 After successful playback `swfoplayback.txt` must be deleted.
 If it is not, the rename will not occur and the same `swfoplayback.txt` will be sent again. `swfolog.txt` will continue to accumuate new data.
 
-### Special commands to playback data
-* "RP\n" would request a replay.
-* "DP\n" deletes swfoplayback.txt “HALT” shutdown the Pi
-* "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
-
-Commands reveived are alos written to the log file.
 
 The normal sequence is:
 ```
@@ -49,8 +52,6 @@ Send DP
 ```
 
 It is OK to send an extra DP before any RP to make sure the `swfoplayback.txt` file has been deleded
-
-
 
 
 ### to test from another computer
