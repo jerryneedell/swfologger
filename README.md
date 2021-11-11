@@ -21,10 +21,10 @@ adafruit_sdcard.mpy
 ### operation
 At boot CircuitPython executes a file named `code.py`.
 
-The installed `code.py` contains the executable code from `circuitpython/adalogger/adalogger_swfologger.py`
+The installed `code.py` contains the code from `circuitpython/adalogger/adalogger_swfologger.py`
 
 All data sent to the logger is logged to the SDCard in a file named `sd/swfolog.txt` 
-it is assumed that the data will consist only of Telecommands and Simulation Directives and they will newline terminated ASCII strings beginning with
+it is assumed that the data will consist only of Telecommands and Simulation Directives and they will be newline terminated ASCII strings beginning with
 
 * "TC ...\n" (telecommand)
 * "SD ..\n" (simulation directive)
@@ -70,4 +70,14 @@ e.g. `python3 swfotest_rp.py /dev/ttyUSB5`
 * `swfotest_wipe.py` -- send `WIPE` to clear the SDCard
 * `swfoscsim_logger.py` -- runs on system with SCSim and COSMOS - relays all receivd commands (time code messages) to the logger
 
+### updating the swfologger program
+If changes are made to the `adalogger_swfologger.py` code, then it can be installed as follows:
+* copy the updated `adalogger_swfologger.py` to a file name `code.py`
+* connect your computer to the adalogger microusb socket
+* you computer will mount a USB Fash Drive named `CIRCUITPY`
+* copy the new `code.py` to the `CIRCUITPY` drive -- use commandline copy or drag/drop - and overwrite the existing `code.py` file.
+* The logger will reboot automatically. 
+* Eject the `CIRCUITPY` drive.
+* RESET or pwer cycle the swfologger- there is a RESET button on the top of the board.
+* Confirm normal operation.
 
