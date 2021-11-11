@@ -75,7 +75,8 @@ e.g. `python3 swfotest_rp.py /dev/ttyUSB5`
 * `swfotest_rp.py` -- sends `RP` request playback
 * `swfotest_delete` -- sends `DP` to delete the `swfoplayback.txt` file
 * `swfotest_wipe.py` -- send `WIPE` to clear the SDCard
-* `swfoscsim_logger.py` -- runs on system with SCSim and COSMOS - relays all receivd commands (time code messages) to the logger
+* `uart_logger.py` -- runs on system with SCSim and COSMOS -  relays all received commands (time code messages) to the logger
+* `swfoscsim_logger.py` -- runs on system with SCSim and COSMOS - relays all received commands (time code messages) to the logger and generates fake HK and Mag packets (used in early testing)
 
 ### updating the swfologger program
 If changes are made to the `adalogger_swfologger.py` code, then it can be installed as follows:
