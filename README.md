@@ -73,11 +73,12 @@ e.g. `python3 swfotest_rp.py /dev/ttyUSB5`
 ### updating the swfologger program
 If changes are made to the `adalogger_swfologger.py` code, then it can be installed as follows:
 * copy the updated `adalogger_swfologger.py` to a file name `code.py`
-* connect your computer to the adalogger microusb socket
-* you computer will mount a USB Fash Drive named `CIRCUITPY`
-* copy the new `code.py` to the `CIRCUITPY` drive -- use commandline copy or drag/drop - and overwrite the existing `code.py` file.
+* connect the computer wit the updated `code.py` file to the adalogger microUSB socket
+* The computer will mount a USB Fash Drive named `CIRCUITPY`
+* copy the new `code.py` to the `CIRCUITPY` drive -- use command line copy or drag/drop - and overwrite the existing `code.py` file.
 * The logger will reboot automatically. 
-* Eject the `CIRCUITPY` drive.
-* RESET or pwer cycle the swfologger- there is a RESET button on the top of the board.
+* Eject the `CIRCUITPY` drive - waitf for it to confirm that it has been properly ejected and is save to remove.
+* Disconnect the microUSB cable.
+* RESET or power cycle the swfologger- there is a RESET button on the top of the board.
 * Confirm normal operation.
 
