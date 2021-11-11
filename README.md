@@ -7,11 +7,17 @@ Sandisk 4Gbyte SD Card MicroSD HC Class 4
 
 ## logger software
 The SWFO logger software is written in Python for execution under CircuitPython https://github.com/adafruit/circuitpython
+
 CircuitPython is Python implmentation for use with Microcontrollers.
+
 The Adalogger board has the following firmware installed:
+
 Bootloader:bootloader-feather_m0_3.13.0.bin
+
 https://github.com/jerryneedell/swfologger/blob/main/circuitpython/adalogger/bootloader-feather_m0_3.13.0.bin
+
 CircuitPython: V7.0.0
+
 https://github.com/jerryneedell/swfologger/blob/main/circuitpython/adalogger/adafruit-circuitpython-feather_m0_adalogger-en_US-7.0.0.uf2
 
 ### CircuitPython libraries installed
