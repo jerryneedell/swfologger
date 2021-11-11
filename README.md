@@ -2,8 +2,9 @@
 SWFO data logger
 
 
-## logger microcontroller
+## logger microcontroller hardware
 Adafruit Feather M0 Adalogger https://www.adafruit.com/product/2796
+Sandisk 4Gbyte SD Card MicroSD HC Class 4 https://www.amazon.com/gp/product/B0106QRO8I/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1
 
 ## logger software
 Bootloader:bootloader-feather_m0_3.13.0.bin
