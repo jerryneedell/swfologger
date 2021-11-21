@@ -42,7 +42,7 @@ it is assumed that the data will consist only of Telecommands and Simulation Dir
 * "DP\n" deletes swfoplayback.txt
 * "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
 
-Commands reveived are alos written to the log file.
+Commands reveived are also written to the log file.
 
 when a playback is requested, the `swfolog.txt` file is renamed to `swfoplayback.txt` so incomming commands may still be logged to `swfolog.txt`
 
