@@ -36,7 +36,9 @@ def get_data():
         if not dumping_data:
             if data[0] == 0x52 and data[1] == 0x50:  # RP
                 print("Playback request\r\n")
-                os.rename("/sd/swfolog.txt","/sd/swfoplayback.txt")
+                if "swfoplayback.txt" not in os.listdir("/sd"):
+                    os.rename("/sd/swfolog.txt","/sd/swfoplayback.txt")
+                    print("Renamed Playback File\r\n")
                 dumping_data = True
             elif data[0] == 0x44 and data[1] == 0x50:  # DP
                 if "swfoplayback.txt" in os.listdir("/sd"):
