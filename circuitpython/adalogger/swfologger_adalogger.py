@@ -23,30 +23,33 @@ def get_data():
     data = None
     if ser.in_waiting:
         print(ser.in_waiting)
-        data = ser.readline()
-        print(ser.in_waiting, len(data))
+        try:
+            data = ser.readline()
+        except Exception as e:
+            print("Error reading data: ",e)
     if data:
+        print(ser.in_waiting, len(data))
         if data[len(data)-1] != 0x0a :
             print("missing newline\r\n")
         try:
             with open("/sd/swfolog.txt","a") as logfile:
                 logfile.write(data)
         except Exception as e:
-            print("decode error",e)
+            print("Error writing data",e)
         if not dumping_data:
-            if data[0] == 0x52 and data[1] == 0x50:  # RP
+            if len(data) == 3 and data[0] == 0x52 and data[1] == 0x50:  # RP
                 print("Playback request\r\n")
                 if "swfoplayback.txt" not in os.listdir("/sd"):
                     os.rename("/sd/swfolog.txt","/sd/swfoplayback.txt")
                     print("Renamed Playback File\r\n")
                 dumping_data = True
-            elif data[0] == 0x44 and data[1] == 0x50:  # DP
+            elif len(data) == 3 and data[0] == 0x44 and data[1] == 0x50:  # DP
                 if "swfoplayback.txt" in os.listdir("/sd"):
                     print("Deleted Playback File\r\n")
                     os.remove("/sd/swfoplayback.txt")
                 else:
                     print("No Playback File Found\r\n")
-            elif data[0] == 0x57 and data[1] == 0x49 and data[2] == 0x50 and data[3] == 0x45:  # WIPE
+            elif len(data) == 5 and data[0] == 0x57 and data[1] == 0x49 and data[2] == 0x50 and data[3] == 0x45:  # WIPE
                 if "swfoplayback.txt" in os.listdir("/sd"):
                     print("Deleted Playback File\r\n")
                     os.remove("/sd/swfoplayback.txt")
@@ -61,9 +64,7 @@ def get_data():
                     with open("/sd/swfolog.txt","a") as logfile:
                         logfile.write(data)
                 except Exception as e:
-                    print("decode error",e)
-        if data[0] == 0x48 and data[1] == 0x41 and data[2] == 0x4C and data[3] == 0x54:  # HALT
-            print("Shutdown request not implemented\r\n")
+                    print("Error writing data",e)
 
 while True:
     get_data()
