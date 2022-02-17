@@ -21,7 +21,7 @@ try:
     storage.mount(vfs, '/sd')
 except OSError as e:
     print("Unable to access SD Card: ",e)
-    line="SWFO LOGGER NOTOK: No SD Card\r\n"
+    line="SWFO LOGGER NOTOK: No SD Card\n"
     ser.write(bytes(line,"UTF-8"))
 
 
@@ -37,7 +37,7 @@ def get_data():
             data = ser.readline()
         except Exception as e:
             print("Error reading data: ",e)
-            line="SWFO LOGGER NOTOK: failed read\r\n"
+            line="SWFO LOGGER NOTOK: failed read\n"
             ser.write(bytes(line,"UTF-8"))
     if data:
         print(ser.in_waiting, len(data))
@@ -49,7 +49,7 @@ def get_data():
                     logfile.write(data)
             except Exception as e:
                 print("Error writing data",e)
-                line="SWFO LOGGER NOTOK: failed write\r\n"
+                line="SWFO LOGGER NOTOK: failed write\n"
                 ser.write(bytes(line,"UTF-8"))
             if not dumping_data:
                 if len(data) == 3 and data[0] == 0x52 and data[1] == 0x50:  # RP
@@ -82,16 +82,16 @@ def get_data():
                         print("Error writing data",e)
                 if len(data) == 3 and data[0] == 0x53 and data[1] == 0x54:  # ST
                     print("Status request\r\n")
-                    line="SWFO LOGGER OK: "+ DATE_CODE + "\r\n"
+                    line="SWFO LOGGER OK: Date Code:"+ DATE_CODE + "\n"
                     ser.write(bytes(line,"UTF-8"))
             else:
                 if len(data) == 3 and data[0] == 0x41 and data[1] == 0x42:  # AB
                     print("Abort Playback\r\n")
                     dumping_data = False
-                    line="SWFO LOGGER OK: Playback Aborted\r\n"
+                    line="SWFO LOGGER OK: Playback Aborted\n"
                     ser.write(bytes(line,"UTF-8"))
         else:
-                    line="SWFO LOGGER NOTOK: No SDCard\r\n"
+                    line="SWFO LOGGER NOTOK: No SDCard\n"
                     ser.write(bytes(line,"UTF-8"))
 
 while True:
