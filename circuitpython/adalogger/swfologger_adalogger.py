@@ -37,7 +37,7 @@ def get_data():
             data = ser.readline()
         except Exception as e:
             print("Error reading data: ",e)
-            line="SWFO LOGGER NOTOK: " + str(e) + "\n"
+            line="SWFO LOGGER NOTOK: read error: " + str(e) + "\n"
             ser.write(bytes(line,"UTF-8"))
     if data:
         print(ser.in_waiting, len(data))
@@ -49,7 +49,7 @@ def get_data():
                     logfile.write(data)
             except Exception as e:
                 print("Error writing data",e)
-                line="SWFO LOGGER NOTOK: " + str(e) + "\n"
+                line="SWFO LOGGER NOTOK: write error: " + str(e) + "\n"
                 ser.write(bytes(line,"UTF-8"))
             if not dumping_data:
                 if len(data) == 3 and data[0] == 0x52 and data[1] == 0x50:  # RP
@@ -80,7 +80,7 @@ def get_data():
                             logfile.write(data)
                     except Exception as e:
                         print("Error writing data",e)
-                        line="SWFO LOGGER NOTOK: " + str(e) + "\n"
+                        line="SWFO LOGGER NOTOK: write error: " + str(e) + "\n"
                         ser.write(bytes(line,"UTF-8"))
                 if len(data) == 3 and data[0] == 0x53 and data[1] == 0x54:  # ST
                     print("Status request\r\n")
@@ -97,15 +97,20 @@ def get_data():
                     ser.write(bytes(line,"UTF-8"))
 
 while True:
-    get_data()
-    if dumping_data:
-        with open("/sd/swfoplayback.txt","r") as playbackfile:
-            while dumping_data :
-                line=playbackfile.readline()
-                if line:
-                    ser.write(bytes(line,"UTF-8"))
-                else:
-                    dumping_data = False
-                    print("End of Playback")
-                get_data()
+    try:
+        get_data()
+        if dumping_data:
+            with open("/sd/swfoplayback.txt","r") as playbackfile:
+                while dumping_data :
+                    line=playbackfile.readline()
+                    if line:
+                        ser.write(bytes(line,"UTF-8"))
+                    else:
+                        dumping_data = False
+                        print("End of Playback")
+                    get_data()
+    except Exception as e:
+        print("some error ocurred",e)
+        line="SWFO LOGGER NOTOK: error: " + str(e) + "\n"
+        er.write(bytes(line,"UTF-8"))
 
