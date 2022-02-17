@@ -41,6 +41,8 @@ it is assumed that the data will consist only of Telecommands and Simulation Dir
 * "RP\n" would request a replay.
 * "DP\n" deletes swfoplayback.txt
 * "WIPE\n" deletes both the swfoplayback.txt and swfolog.txt files
+* "ST\n" print SWFO Logger status
+* "AB\n" Abort playback
 
 Commands reveived are also written to the log file.
 
