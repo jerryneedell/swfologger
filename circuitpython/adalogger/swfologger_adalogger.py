@@ -21,7 +21,7 @@ try:
     storage.mount(vfs, '/sd')
 except OSError as e:
     print("Unable to access SD Card: ",e)
-    line="SWFO LOGGER NOTOK: No SD Card\n"
+    line="SWFO LOGGER NOTOK: " + str(e) +"\n"
     ser.write(bytes(line,"UTF-8"))
 
 
@@ -37,7 +37,7 @@ def get_data():
             data = ser.readline()
         except Exception as e:
             print("Error reading data: ",e)
-            line="SWFO LOGGER NOTOK: failed read\n"
+            line="SWFO LOGGER NOTOK: " + str(e) + "\n"
             ser.write(bytes(line,"UTF-8"))
     if data:
         print(ser.in_waiting, len(data))
@@ -49,7 +49,7 @@ def get_data():
                     logfile.write(data)
             except Exception as e:
                 print("Error writing data",e)
-                line="SWFO LOGGER NOTOK: failed write\n"
+                line="SWFO LOGGER NOTOK: " + str(e) + "\n"
                 ser.write(bytes(line,"UTF-8"))
             if not dumping_data:
                 if len(data) == 3 and data[0] == 0x52 and data[1] == 0x50:  # RP
@@ -80,6 +80,8 @@ def get_data():
                             logfile.write(data)
                     except Exception as e:
                         print("Error writing data",e)
+                        line="SWFO LOGGER NOTOK: " + str(e) + "\n"
+                        ser.write(bytes(line,"UTF-8"))
                 if len(data) == 3 and data[0] == 0x53 and data[1] == 0x54:  # ST
                     print("Status request\r\n")
                     line="SWFO LOGGER OK: Date Code:"+ DATE_CODE + "\n"
